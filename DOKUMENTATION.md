@@ -5,8 +5,6 @@ Agile Webanwendung mit Python
 WiSe 2025/2026
 https://github.com/tac0rosa/Hogwarts-Inventory
 
-> Dieses Dokument wird im Laufe der Entwicklung nach und nach vervollständigt (siehe Abschnitt "Documentation" in `TASKS.md`), nicht alles auf einmal am Ende.
-
 ## 1. Motivation und Anforderungen
 
 ### 1.1 Projektidee

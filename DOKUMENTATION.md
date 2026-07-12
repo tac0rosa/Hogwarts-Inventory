@@ -40,7 +40,68 @@ Quellen zu diesem Abschnitt sind auch in Abschnitt 6 (Quellen) aufgeführt.
 
 ## 2. Planung und Design
 
-_TODO: Aufgabenverteilung und Teamorganisation, gewähltes Framework/Entwicklungsumgebung/Tools, Diagramm der Datenbankstruktur._
+### 2.1 Team, Aufgabenteilung und Zusammenarbeit
+
+Das Team besteht aus Sarah Prante und Rocio Sainz. Abgestimmt haben wir uns sowohl persönlich als auch über Discord. Code und Dokumentation entstehen bei uns gemeinsam — beide arbeiten an beidem mit, es gibt aber eine leichte Schwerpunktverteilung: Sarah legt etwas mehr Fokus auf Design und die laufende Dokumentation, Rocio etwas mehr auf die Programmierung. Über `git` und GitHub bleibt für beide jederzeit nachvollziehbar, wer welchen Teil zuletzt bearbeitet hat.
+
+### 2.2 Gewählte Technologien
+
+**Django**
+Als Web-Framework verwenden wir Django (Python), das im Rahmen des Moduls vorgegeben ist. Django bringt mit dem integrierten Admin-Interface, dem ORM und den ModelForms bereits vieles mit, was für eine CRUD-lastige Anwendung wie diese direkt gebraucht wird, ohne dass wir Authentifizierung, Formularvalidierung oder Datenbankzugriff von Grund auf selbst schreiben müssen.
+
+**Python 3.12**
+Als Interpreter-Version nutzen wir Python 3.12, kompatibel mit der in `requirements.txt` festgelegten Django-Version. (Die konkrete Geschichte dazu, warum das nicht von Anfang an die naheliegendste Wahl war, steht in Abschnitt 3.3.)
+
+**SQLite**
+Als Datenbank kommt SQLite zum Einsatz, Djangos Standarddatenbank ohne separate Serverinstallation — für ein Projekt dieser Größe reicht das aus, und jede\*r kann das Projekt lokal starten, ohne vorher eine Datenbank aufsetzen zu müssen.
+
+**Git & GitHub**
+Zur Versionskontrolle und für die Zusammenarbeit am Code nutzen wir Git mit einem gemeinsamen Repository auf GitHub.
+
+**Visual Studio Code**
+Als Editor verwenden wir beide VS Code.
+
+### 2.3 Datenbankstruktur
+
+```mermaid
+erDiagram
+    HOUSE ||--o{ PROFESSOR : "optional Hauslehrer*in von"
+    HOUSE ||--o{ STUDENT : "gehört zu"
+    HOUSE ||--o{ ITEM : "gehört zu"
+    PROFESSOR ||--o{ STUDENT : "optionale*r Berater*in von"
+    STUDENT ||--o{ ITEM : "optionale*r Besitzer*in von"
+
+    HOUSE {
+        int id PK
+        string name
+        string founder
+        string common_room
+        int points
+    }
+    PROFESSOR {
+        int id PK
+        string name
+        string subject
+        string office
+        int house_id FK "nullable"
+    }
+    STUDENT {
+        int id PK
+        string name
+        int year
+        int house_id FK
+        int advisor_id FK "nullable"
+    }
+    ITEM {
+        int id PK
+        string name
+        string category
+        int quantity
+        string description
+        int owner_id FK "nullable"
+        int house_id FK
+    }
+```
 
 ## 3. Entwicklung
 
@@ -64,4 +125,9 @@ _TODO: welche ursprünglichen Anforderungen umgesetzt wurden, persönliche Einsc
 
 ## 6. Quellen
 
-_TODO: URLs und Referenzen zu verwendeten Bibliotheken oder Code von Dritten._
+_Wird laufend ergänzt._
+
+- https://github.com/burke-software/schooldriver — Django-SIS, School Information System (Recherche Abschnitt 1.4)
+- https://github.com/topics/school-management-system — weitere Django School Management Systeme (Recherche Abschnitt 1.4)
+- https://www.sortly.com/ — Asset-/Inventarverwaltung, Vergleich für Items (Recherche Abschnitt 1.4)
+- https://www.assetpanda.com/ — Asset-/Inventarverwaltung, Vergleich für Items (Recherche Abschnitt 1.4)

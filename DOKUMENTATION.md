@@ -285,8 +285,9 @@ Schritte zur Inbetriebnahme (auf einem lokalen Rechner):
 3. virtuelle Umgebung anlegen und aktivieren: `python -m venv .venv`, danach `.venv\Scripts\activate` (Windows) bzw. `source .venv/bin/activate` (macOS/Linux)
 4. Abhängigkeiten installieren: `pip install -r requirements.txt` (Django 4.2.30, Asgiref 3.11.1, Sqlparse 0.5.5, Typing_extensions 4.15.0, Versionen auch in `requirements.txt`)
 5. Datenbank einrichten: `python manage.py migrate`
-6. Anwendung starten: `python manage.py runserver`
-7. Browser öffnen und `http://127.0.0.1:8000/` besuchen (auf den Link im Terminal klicken); die vier Bereiche sind vorerst direkt über `/houses/`, `/professors/`, `/students/` und `/items/` erreichbar, die Navigation dazwischen folgt erst mit Task 10
+6. (optional) Beispieldaten laden: `python manage.py seed_movie_data` — befüllt Houses, Professors, Students und Items mit Daten basierend auf den Harry-Potter-Filmen (siehe `inventory/management/commands/seed_movie_data.py`); ohne diesen Schritt startet die Anwendung mit einer leeren Datenbank
+7. Anwendung starten: `python manage.py runserver`
+8. Browser öffnen und `http://127.0.0.1:8000/` besuchen (auf den Link im Terminal klicken); die Navigation oben auf jeder Seite führt zu allen vier Bereichen (`/houses/`, `/professors/`, `/students/`, `/items/`)
 
 ## 5. Fazit
 

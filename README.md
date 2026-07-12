@@ -79,6 +79,16 @@ Each of the four sections (Houses, Professors, Students, Items) exposes the same
 
 For example, Houses: `/houses/`, `/houses/new/`, `/houses/<pk>/`, `/houses/<pk>/edit/`, `/houses/<pk>/delete/`. The same pattern applies under `/professors/`, `/students/`, and `/items/`. The home page (`/`) links into all four list views.
 
+## Sample data
+
+The database starts out empty. To try the app with realistic data instead, run (once migrations have been applied):
+
+```bash
+python manage.py seed_movie_data
+```
+
+This wipes and repopulates all four models with data based on the Harry Potter movies — houses, professors, students, and items — via `inventory/management/commands/seed_movie_data.py`.
+
 ## Useful commands
 
 - Check if Django is configured correctly:

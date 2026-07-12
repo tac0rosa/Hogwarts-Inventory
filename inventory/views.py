@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from .forms import HouseForm, ProfessorForm, StudentForm
-from .models import House, Professor, Student
+from .forms import HouseForm, ProfessorForm, StudentForm, ItemForm
+from .models import House, Professor, Student, Item
 
 
 def home(request):
@@ -127,3 +127,39 @@ class StudentDeleteView(DeleteView):
     template_name = 'inventory/student_confirm_delete.html'
     context_object_name = 'student'
     success_url = reverse_lazy('student_list')
+
+
+class ItemListView(ListView):
+    model = Item
+    template_name = 'inventory/item_list.html'
+    context_object_name = 'items'
+    ordering = ['name']
+
+
+class ItemDetailView(DetailView):
+    model = Item
+    template_name = 'inventory/item_detail.html'
+    context_object_name = 'item'
+
+
+class ItemCreateView(CreateView):
+    model = Item
+    form_class = ItemForm
+    template_name = 'inventory/item_form.html'
+    success_url = reverse_lazy('item_list')
+
+
+class ItemUpdateView(UpdateView):
+    model = Item
+    form_class = ItemForm
+    template_name = 'inventory/item_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('item_detail', kwargs={'pk': self.object.pk})
+
+
+class ItemDeleteView(DeleteView):
+    model = Item
+    template_name = 'inventory/item_confirm_delete.html'
+    context_object_name = 'item'
+    success_url = reverse_lazy('item_list')

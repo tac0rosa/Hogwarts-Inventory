@@ -206,7 +206,15 @@ _TODO: nach Abschluss von Task 8-9 (Items — read/write views)._
 
 ## 4. Inbetriebnahme
 
-_TODO: Schritte zur lokalen Inbetriebnahme des Projekts (siehe auch `README.md`)._
+Schritte zur Inbetriebnahme (auf einem lokalen Rechner):
+
+1. Repository klonen: `git clone https://github.com/tac0rosa/Hogwarts-Inventory.git` und in den Ordner wechseln (`cd Hogwarts-Inventory`)
+2. benötigte Programmiersprache: Python 3.12 (siehe 3.1)
+3. virtuelle Umgebung anlegen und aktivieren: `python -m venv .venv`, danach `.venv\Scripts\activate` (Windows) bzw. `source .venv/bin/activate` (macOS/Linux)
+4. Abhängigkeiten installieren: `pip install -r requirements.txt` (Django 4.2.30, Asgiref 3.11.1, Sqlparse 0.5.5, Typing_extensions 4.15.0, Versionen auch in `requirements.txt`)
+5. Datenbank einrichten: `python manage.py migrate`
+6. Anwendung starten: `python manage.py runserver`
+7. Browser öffnen und `http://127.0.0.1:8000/` besuchen (auf den Link im Terminal klicken); die vier Bereiche sind vorerst direkt über `/houses/`, `/professors/`, `/students/` und `/items/` erreichbar, die Navigation dazwischen folgt erst mit Task 10
 
 ## 5. Fazit
 

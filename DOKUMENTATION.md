@@ -305,9 +305,27 @@ Insgesamt hat uns die Arbeit an Hogwarts Inventory Spaß gemacht. Da wir beide e
 
 ## 6. Quellen
 
-_Wird laufend ergänzt._
+**Recherche zu bestehenden Lösungen (Abschnitt 1.4)**
 
 - https://github.com/burke-software/schooldriver — Django-SIS, School Information System (Recherche Abschnitt 1.4)
 - https://github.com/topics/school-management-system — weitere Django School Management Systeme (Recherche Abschnitt 1.4)
 - https://www.sortly.com/ — Asset-/Inventarverwaltung, Vergleich für Items (Recherche Abschnitt 1.4)
 - https://www.assetpanda.com/ — Asset-/Inventarverwaltung, Vergleich für Items (Recherche Abschnitt 1.4)
+
+**Django-Dokumentation (verwendet während der gesamten Entwicklung)**
+
+- https://docs.djangoproject.com/en/4.2/topics/class-based-views/generic-display/ — `ListView`/`DetailView`, Grundlage für alle Listen- und Detailansichten (Abschnitt 3.2–3.5)
+- https://docs.djangoproject.com/en/4.2/topics/class-based-views/generic-editing/ — `CreateView`/`UpdateView`/`DeleteView`, Grundlage für alle Formular- und Löschviews (Abschnitt 3.2–3.5)
+- https://docs.djangoproject.com/en/4.2/topics/forms/modelforms/ — `ModelForm`, insbesondere die automatische Dropdown-Generierung für Fremdschlüsselfelder (Abschnitt 3.3, 3.4)
+- https://docs.djangoproject.com/en/4.2/ref/models/fields/#foreignkey — `on_delete`-Optionen (`CASCADE`, `SET_NULL`), zentral für die Löschregeln aus Anforderung 1.3 (Abschnitt 3.2, 3.3)
+- https://docs.djangoproject.com/en/4.2/topics/migrations/ — Migrationen, u. a. für die nachträgliche Änderung von `Item.house` (Abschnitt 3.2)
+- https://docs.djangoproject.com/en/4.2/ref/django-admin/#createsuperuser — Zugriff auf das Admin-Interface (Abschnitt 4)
+- https://docs.djangoproject.com/en/4.2/howto/custom-management-commands/ — eigene `manage.py`-Befehle, Grundlage für `seed_movie_data` (Abschnitt 4)
+
+**Sonstige Werkzeuge**
+
+- https://mermaid.js.org/syntax/entityRelationshipDiagram.html — Syntax für das ER-Diagramm in Abschnitt 2.3
+
+**Datenquelle für die Beispieldaten**
+
+- https://harrypotter.fandom.com/ — Harry Potter Wiki, Referenz für Häuser, Professor\*innen, Schüler\*innen und Gegenstände aus den Filmen, verwendet zur Befüllung der Datenbank mit `seed_movie_data` (Abschnitt 4)

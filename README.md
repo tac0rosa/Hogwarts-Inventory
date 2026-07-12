@@ -54,6 +54,31 @@ Then open your browser and visit:
 http://127.0.0.1:8000/
 ```
 
+## Data model
+
+Four models live in `inventory/models.py`, all registered in the Django admin (`/admin/`) as well as their own CRUD views:
+
+- **House** — `name` (unique), `founder`, `common_room`, `points`
+- **Professor** — `name`, `subject`, `office`; `house` (optional — the house they're head of)
+- **Student** — `name`, `year`; `house` (required); `advisor` (optional, a `Professor`)
+- **Item** — `name`, `category`, `quantity`, `description`; `house` (required); `owner` (optional, a `Student`)
+
+Deleting a `House` cascades to its `Student`s and `Item`s. Deleting a `Professor` or a `Student` only clears the optional `advisor`/`owner` references pointing to them — nothing else is deleted.
+
+## Routes
+
+Each of the four sections (Houses, Professors, Students, Items) exposes the same five routes:
+
+| Path | Purpose |
+| --- | --- |
+| `/<section>/` | List view |
+| `/<section>/new/` | Create form |
+| `/<section>/<pk>/` | Detail view |
+| `/<section>/<pk>/edit/` | Edit form |
+| `/<section>/<pk>/delete/` | Delete confirmation |
+
+For example, Houses: `/houses/`, `/houses/new/`, `/houses/<pk>/`, `/houses/<pk>/edit/`, `/houses/<pk>/delete/`. The same pattern applies under `/professors/`, `/students/`, and `/items/`. The home page (`/`) links into all four list views.
+
 ## Useful commands
 
 - Check if Django is configured correctly:

@@ -47,17 +47,17 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
 
 - [ ] 11. Polish
   - Light styling pass across nav + all templates
-  - README update (models, routes)
+  - [x] README update (models, routes)
 
 ## Documentation
 Lives in `DOKUMENTATION.md` (written in German). Filled in gradually, alongside the rest of the tasks — not all at once at the end.
 
-- [ ] D1. Motivation and requirements — project idea, team, problem statement, existing solutions (doesn't depend on the code, can be done now)
-- [ ] D2. Planning and design — task distribution, framework/environment/tools, DB diagram (do after #1; revisit if the model changes)
-- [ ] D3. Development — features (screenshots) and technical challenges (code snippets); add one block per finished CRUD section: Houses (after #2-3), Professors (after #4-5), Students (after #6-7), Items (after #8-9)
-- [ ] D4. Getting started — steps to run the project locally (can lean on the README; do near #10)
-- [ ] D5. Conclusion — which initial requirements were implemented, personal assessment, possible future improvements (at the end, after #10)
-- [ ] D6. Sources — links to libraries/docs and any third-party code used (note these as they come up, don't leave it for the end)
+- [x] D1. Motivation and requirements — project idea, team, problem statement, existing solutions (doesn't depend on the code, can be done now)
+- [x] D2. Planning and design — task distribution, framework/environment/tools, DB diagram (do after #1; revisit if the model changes)
+- [x] D3. Development — features (screenshots) and technical challenges (code snippets); add one block per finished CRUD section: Houses (after #2-3), Professors (after #4-5), Students (after #6-7), Items (after #8-9)
+- [x] D4. Getting started — steps to run the project locally (can lean on the README; do near #10)
+- [x] D5. Conclusion — which initial requirements were implemented, personal assessment, possible future improvements (at the end, after #10)
+- [x] D6. Sources — links to libraries/docs and any third-party code used (note these as they come up, don't leave it for the end)
 It has to be around 15 pages and it can contain screenshots.
 
 ## Notes

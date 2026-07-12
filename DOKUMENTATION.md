@@ -50,7 +50,7 @@ Das Team besteht aus Sarah Prante und Rocio Sainz. Abgestimmt haben wir uns sowo
 Als Web-Framework verwenden wir Django (Python), das im Rahmen des Moduls vorgegeben ist. Django bringt mit dem integrierten Admin-Interface, dem ORM und den ModelForms bereits vieles mit, was für eine CRUD-lastige Anwendung wie diese direkt gebraucht wird, ohne dass wir Authentifizierung, Formularvalidierung oder Datenbankzugriff von Grund auf selbst schreiben müssen.
 
 **Python 3.12**
-Als Interpreter-Version nutzen wir Python 3.12, kompatibel mit der in `requirements.txt` festgelegten Django-Version. (Die konkrete Geschichte dazu, warum das nicht von Anfang an die naheliegendste Wahl war, steht in Abschnitt 3.3.)
+Als Interpreter-Version nutzen wir Python 3.12, kompatibel mit der in `requirements.txt` festgelegten Django-Version. (Die konkrete Geschichte dazu, warum das nicht von Anfang an die naheliegendste Wahl war, steht in Abschnitt 3.1.)
 
 **SQLite**
 Als Datenbank kommt SQLite zum Einsatz, Djangos Standarddatenbank ohne separate Serverinstallation — für ein Projekt dieser Größe reicht das aus, und jede\*r kann das Projekt lokal starten, ohne vorher eine Datenbank aufsetzen zu müssen.
@@ -105,15 +105,104 @@ erDiagram
 
 ## 3. Entwicklung
 
-_TODO: Beschreibung der Funktionalitäten (mit Screenshots) und technische Herausforderungen (mit Codeausschnitten). Ein Abschnitt pro CRUD-Bereich (Houses, Professors, Students, Items)._
+### 3.1 Umgebung: Python- und Django-Version
 
-### Houses
+Bevor überhaupt ein Modell existierte, gab es schon die erste technische Hürde: Das virtuelle Environment war zunächst mit Python 3.14 aufgesetzt, der zu dem Zeitpunkt aktuellsten Version. Django 4.2 — die im Modul vorgegebene Version — unterstützt Python 3.14 aber (noch) nicht; beim Ausführen von `pip install -r requirements.txt` bzw. beim ersten `manage.py check` kam es zu Fehlern, die sich auf inkompatible Python-Interna zurückführen ließen. Die Alternative wäre gewesen, statt Python herunterzustufen einfach auf eine neuere, mit Python 3.14 kompatible Django-Version zu wechseln — das hätte aber bedeutet, von der im Modul vorgegebenen und in `requirements.txt` festgelegten Django 4.2 abzuweichen, nur um ein lokales Versionsproblem zu lösen. Der pragmatischere Weg war daher, das `.venv` mit Python 3.12 neu aufzusetzen, einer Version, die von Django 4.2 offiziell unterstützt wird. Seitdem läuft die Umgebung stabil; die Lehre daraus war, vor dem Anlegen eines Environments kurz die Kompatibilitätsmatrix des vorgegebenen Frameworks zu prüfen, statt automatisch die neueste Interpreter-Version zu nehmen.
 
-### Professors
+### 3.2 Houses
+
+**Funktionalität**
+
+Houses ist der erste vollständig umgesetzte CRUD-Bereich und damit auch die Vorlage für alle weiteren Entitäten. Über `/houses/` gelangt man zu einer Listenansicht aller Häuser mit Name, Gründer\*in und Punkten; ein Klick auf den Namen führt zur Detailansicht mit allen Feldern (inklusive Gemeinschaftsraum). Von dort aus lassen sich Häuser anlegen (`/houses/new/`), bearbeiten (`/houses/<pk>/edit/`) und löschen (`/houses/<pk>/delete/`), jeweils über ein eigenes Formular bzw. eine Sicherheitsabfrage vor dem Löschen. Zusätzlich sind alle vier Häuser weiterhin vollständig über das Django-Admin-Interface verwaltbar, da `House` in `inventory/admin.py` registriert ist — die eigenen Views sind also eine zusätzliche, aber keine zwingende Oberfläche.
+
+![Liste aller Häuser mit Name, Gründer*in und Punkten](docs/screenshots/house_list.png)
+
+![Detailansicht eines Hauses mit allen Feldern sowie Links zum Bearbeiten und Löschen](docs/screenshots/house_detail.png)
+
+![Formular zum Anlegen eines neuen Hauses, erzeugt aus dem HouseForm-ModelForm](docs/screenshots/house_form.png)
+
+![Sicherheitsabfrage vor dem Löschen eines Hauses mit Hinweis auf die Kaskadenlöschung der zugehörigen Items](docs/screenshots/house_confirm_delete.png)
+
+Technisch stehen hinter den fünf URLs fünf schlanke, generische Class-Based Views (`ListView`, `DetailView`, `CreateView`, `UpdateView`, `DeleteView`), die jeweils nur Modell, Template und ggf. Formularklasse angeben müssen:
+
+```python
+class HouseCreateView(CreateView):
+    model = House
+    form_class = HouseForm
+    template_name = 'inventory/house_form.html'
+    success_url = reverse_lazy('house_list')
+
+
+class HouseUpdateView(UpdateView):
+    model = House
+    form_class = HouseForm
+    template_name = 'inventory/house_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('house_detail', kwargs={'pk': self.object.pk})
+```
+
+Create- und Update-View teilen sich bewusst dasselbe Template `house_form.html` und dieselbe `ModelForm` (`HouseForm`); das Template unterscheidet Anlegen und Bearbeiten nur über die Existenz von `house` im Kontext (`{% if house %}Edit …{% else %}Add House{% endif %}`).
+
+**Technische Herausforderung**
+
+Anforderung 1.3 verlangt, dass beim Löschen eines Hauses auch dessen Items automatisch mitgelöscht werden, um die Datenintegrität zu sichern. Im ursprünglichen Modell war `Item.house` — wie `Item.owner` — als `null=True, blank=True` mit `on_delete=SET_NULL` angelegt, weil das beim ersten Entwurf aller vier Modelle in einem Rutsch einfacher zu tippen war. Das widerspricht aber der eigenen Anforderung: Ein Item ohne Haus soll es laut Spezifikation gar nicht geben, und beim Löschen eines Hauses sollten dessen Items verschwinden statt "herrenlos" mit `house = NULL` liegen zu bleiben. Die Korrektur war eine kleine, aber inhaltlich wichtige Migration:
+
+```python
+# inventory/migrations/0002_alter_item_house.py
+migrations.AlterField(
+    model_name='item',
+    name='house',
+    field=models.ForeignKey(
+        on_delete=django.db.models.deletion.CASCADE,
+        related_name='items',
+        to='inventory.house',
+    ),
+)
+```
+
+`house` ist damit ein Pflichtfeld ohne `null=True` geworden, und `on_delete` wechselt von `SET_NULL` auf `CASCADE`. Sichtbar wird das in der Löschbestätigung (`house_confirm_delete.html`), die explizit warnt: *"This will also delete every item that belongs to {{ house.name }}."* Die Migration wurde nachträglich in den bereits laufenden Houses-Zweig eingefügt (Commit *"Require a house on every Item"*), statt sie erst bei den Items-Views nachzuholen — Löschregeln, die eine andere Entität betreffen, gehören inhaltlich zu der Entität, die sie auslöst.
+
+### 3.3 Professors
+
+**Funktionalität**
+
+Professors folgt exakt demselben Muster wie Houses: Liste unter `/professors/` (Name, Fach, Büro, ggf. Haus, dessen Hauslehrer\*in die Person ist), Detailansicht, sowie Anlegen/Bearbeiten/Löschen unter `/professors/new/`, `/professors/<pk>/edit/` und `/professors/<pk>/delete/`. Der inhaltliche Unterschied zu Houses liegt im `house`-Feld: Es ist optional (`null=True, blank=True`), da nicht jede\*r Professor\*in zwangsläufig Hauslehrer\*in ist. In der Liste wird ein fehlendes Haus als "—" dargestellt (`{{ professor.house.name|default:"—" }}`), im Anlege-/Bearbeitungsformular erscheint das Feld als Dropdown mit einer leeren Option, ergänzt um den in `models.py` hinterlegten `help_text`.
+
+![Liste aller Professor*innen mit Fach, Büro und optionalem Haus](docs/screenshots/professor_list.png)
+
+![Detailansicht einer Professorin](docs/screenshots/professor_detail.png)
+
+![Formular zum Anlegen eines Professors mit Dropdown für das optionale Haus-Feld](docs/screenshots/professor_form.png)
+
+![Sicherheitsabfrage vor dem Löschen eines Professors mit Hinweis auf betroffene Berater*innen-Beziehungen](docs/screenshots/professor_confirm_delete.png)
+
+**Technische Herausforderung**
+
+Der interessante Teil war weniger der CRUD-Code selbst — der ist dank des in 3.2 etablierten Musters (generische Views + `ModelForm`) fast mechanisch — sondern die Frage, wie sich ein optionales Fremdschlüsselfeld korrekt über alle Ebenen hinweg (Modell, Formular, Templates) durchzieht, ohne dass an einer Stelle stillschweigend ein Pflichtfeld daraus wird:
+
+```python
+class Professor(models.Model):
+    ...
+    house = models.ForeignKey(
+        House,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='professors',
+        help_text="House this professor is head of, if any.",
+    )
+```
+
+`null=True` erlaubt `NULL` in der Datenbank, `blank=True` erlaubt ein leeres Feld im Formular — beides zusammen ist nötig, sonst verlangt entweder die Datenbank oder Djangos Formularvalidierung weiterhin ein Haus. Da `ProfessorForm` das Feld nicht anders anpasst, generiert `{{ form.as_p }}` daraus automatisch ein `<select>` mit einer leeren Erstoption, exakt wie im Screenshot oben zu sehen. Beim Löschen eines Hauses, das Hauslehrer\*in für eine\*n Professor\*in ist, greift entsprechend `on_delete=SET_NULL`: Der\*die Professor\*in bleibt bestehen, verliert aber die Zuordnung — anders als bei Items, die beim Löschen ihres Hauses mitgelöscht werden (siehe 3.2). Diese bewusst unterschiedliche Löschstrategie pro Beziehung war ein guter Anlass, `on_delete`-Optionen nicht pauschal, sondern pro Feld anhand der fachlichen Anforderung zu wählen.
 
 ### Students
 
+_TODO: nach Abschluss von Task 6-7 (Students — read/write views)._
+
 ### Items
+
+_TODO: nach Abschluss von Task 8-9 (Items — read/write views)._
 
 ## 4. Inbetriebnahme
 

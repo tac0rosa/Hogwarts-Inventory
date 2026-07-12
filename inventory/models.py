@@ -62,9 +62,7 @@ class Item(models.Model):
     )
     house = models.ForeignKey(
         House,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='items',
     )
 

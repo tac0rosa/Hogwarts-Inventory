@@ -22,7 +22,7 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
   - `house_form.html`, `house_confirm_delete.html`
   - URLs: `/houses/new/`, `/houses/<pk>/edit/`, `/houses/<pk>/delete/`
 
-- [ ] 4. Professors — read views
+- [x] 4. Professors — read views
   - List + detail views/templates, URLs under `/professors/`
 
 - [ ] 5. Professors — write views

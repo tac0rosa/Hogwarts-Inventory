@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ professor.name }} | Hogwarts Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1b1b3a, #4b2e83);
+            color: #f7f3ff;
+            margin: 0;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.12);
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 { margin-top: 0; }
+        dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; }
+        dt { font-weight: bold; }
+        dd { margin: 0; }
+        a { color: #f7f3ff; }
+        .back-link { display: inline-block; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ professor.name }}</h1>
+        <dl>
+            <dt>Subject</dt>
+            <dd>{{ professor.subject }}</dd>
+            <dt>Office</dt>
+            <dd>{{ professor.office|default:"—" }}</dd>
+            <dt>Head of House</dt>
+            <dd>
+                {% if professor.house %}
+                    <a href="{% url 'house_detail' professor.house.pk %}">{{ professor.house.name }}</a>
+                {% else %}
+                    —
+                {% endif %}
+            </dd>
+        </dl>
+        <a class="back-link" href="{% url 'professor_list' %}">&larr; Back to professors</a>
+    </div>
+</body>
+</html>

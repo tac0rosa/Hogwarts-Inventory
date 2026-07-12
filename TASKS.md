@@ -3,7 +3,7 @@
 CRUD build-out for the `inventory` app: **Houses, Professors, Students, Items**.
 Broken into ~10 self-contained commits, each one leaving the app in a working state.
 
-- [ ] 1. Data model layer
+- [x] 1. Data model layer
   - Define `House`, `Professor`, `Student`, `Item` in `inventory/models.py`
     - `House`: name, founder, common_room, points
     - `Professor`: name, subject, office, house (FK → House, nullable, "head of house")
@@ -12,7 +12,7 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
   - `__str__` methods, register all four in `inventory/admin.py`
   - `makemigrations` + commit the migration file
 
-- [ ] 2. Houses — read views
+- [x] 2. Houses — read views
   - `HouseListView`, `HouseDetailView` (or function-based equivalents)
   - `templates/inventory/house_list.html`, `house_detail.html`
   - URLs wired under `/houses/`

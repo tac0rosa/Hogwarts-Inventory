@@ -25,3 +25,6 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'category', 'quantity', 'description', 'house', 'owner']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }

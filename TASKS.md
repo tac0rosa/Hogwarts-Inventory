@@ -45,8 +45,8 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
   - Home page links into each list view
   - Existing templates extended from `base.html` (no visual/style changes yet)
 
-- [ ] 11. Polish
-  - Light styling pass across nav + all templates
+- [x] 11. Polish
+  - [x] Light styling pass across nav + all templates
   - [x] README update (models, routes)
 
 ## Documentation

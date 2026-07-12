@@ -1,32 +1,10 @@
 {% extends 'inventory/base.html' %}
+{% load inventory_extras %}
 
 {% block title %}Students | Hogwarts Inventory{% endblock %}
 
 {% block content %}
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #1b1b3a, #4b2e83);
-        color: #f7f3ff;
-        margin: 0;
-        min-height: 100vh;
-        padding: 2rem 1rem;
-    }
-    .card {
-        background: rgba(255,255,255,0.12);
-        padding: 2rem 2.5rem;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        max-width: 700px;
-        margin: 0 auto;
-    }
-    h1 { margin-top: 0; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    a { color: #f7f3ff; }
-    .back-link { display: inline-block; margin-top: 1.5rem; }
-</style>
-<div class="card">
+<div class="card card-list">
     <h1>Students</h1>
     {% if students %}
         <table>
@@ -43,16 +21,16 @@
                     <tr>
                         <td><a href="{% url 'student_detail' student.pk %}">{{ student.name }}</a></td>
                         <td>{{ student.year }}</td>
-                        <td>{{ student.house.name }}</td>
+                        <td><span class="house-dot house-{{ student.house.name|house_slug }}"></span>{{ student.house.name }}</td>
                         <td>{{ student.advisor.name|default:"—" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p>No students yet.</p>
+        <p class="empty">No students yet.</p>
     {% endif %}
-    <a class="back-link" href="{% url 'student_create' %}">+ Add student</a><br>
+    <a class="back-link" href="{% url 'student_create' %}">+ Add student</a>
     <a class="back-link" href="{% url 'home' %}">&larr; Back to home</a>
 </div>
 {% endblock %}

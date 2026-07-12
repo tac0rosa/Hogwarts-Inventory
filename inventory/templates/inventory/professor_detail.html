@@ -46,6 +46,10 @@
                 {% endif %}
             </dd>
         </dl>
+        <a class="back-link" href="{% url 'professor_update' professor.pk %}">Edit</a>
+        &nbsp;|&nbsp;
+        <a class="back-link" href="{% url 'professor_delete' professor.pk %}">Delete</a>
+        <br>
         <a class="back-link" href="{% url 'professor_list' %}">&larr; Back to professors</a>
     </div>
 </body>

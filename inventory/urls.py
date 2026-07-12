@@ -9,5 +9,8 @@ urlpatterns = [
     path('houses/<int:pk>/edit/', views.HouseUpdateView.as_view(), name='house_update'),
     path('houses/<int:pk>/delete/', views.HouseDeleteView.as_view(), name='house_delete'),
     path('professors/', views.ProfessorListView.as_view(), name='professor_list'),
+    path('professors/new/', views.ProfessorCreateView.as_view(), name='professor_create'),
     path('professors/<int:pk>/', views.ProfessorDetailView.as_view(), name='professor_detail'),
+    path('professors/<int:pk>/edit/', views.ProfessorUpdateView.as_view(), name='professor_update'),
+    path('professors/<int:pk>/delete/', views.ProfessorDeleteView.as_view(), name='professor_delete'),
 ]

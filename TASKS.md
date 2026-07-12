@@ -25,7 +25,7 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
 - [x] 4. Professors — read views
   - List + detail views/templates, URLs under `/professors/`
 
-- [ ] 5. Professors — write views
+- [x] 5. Professors — write views
   - Create/Update/Delete + form, templates, URLs
 
 - [ ] 6. Students — read views

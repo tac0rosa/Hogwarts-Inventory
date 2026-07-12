@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from .forms import HouseForm, ProfessorForm
+from .forms import HouseForm, ProfessorForm, StudentForm
 from .models import House, Professor, Student
 
 
@@ -104,3 +104,26 @@ class StudentDetailView(DetailView):
     model = Student
     template_name = 'inventory/student_detail.html'
     context_object_name = 'student'
+
+
+class StudentCreateView(CreateView):
+    model = Student
+    form_class = StudentForm
+    template_name = 'inventory/student_form.html'
+    success_url = reverse_lazy('student_list')
+
+
+class StudentUpdateView(UpdateView):
+    model = Student
+    form_class = StudentForm
+    template_name = 'inventory/student_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('student_detail', kwargs={'pk': self.object.pk})
+
+
+class StudentDeleteView(DeleteView):
+    model = Student
+    template_name = 'inventory/student_confirm_delete.html'
+    context_object_name = 'student'
+    success_url = reverse_lazy('student_list')

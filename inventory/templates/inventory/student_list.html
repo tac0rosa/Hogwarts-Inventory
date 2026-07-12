@@ -55,6 +55,7 @@
         {% else %}
             <p>No students yet.</p>
         {% endif %}
+        <a class="back-link" href="{% url 'student_create' %}">+ Add student</a><br>
         <a class="back-link" href="{% url 'home' %}">&larr; Back to home</a>
     </div>
 </body>

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import House, Professor
+from .models import House, Professor, Student
 
 
 class HouseForm(forms.ModelForm):
@@ -13,3 +13,9 @@ class ProfessorForm(forms.ModelForm):
     class Meta:
         model = Professor
         fields = ['name', 'subject', 'office', 'house']
+
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['name', 'year', 'house', 'advisor']

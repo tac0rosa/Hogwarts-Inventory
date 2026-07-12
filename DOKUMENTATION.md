@@ -218,7 +218,17 @@ Schritte zur Inbetriebnahme (auf einem lokalen Rechner):
 
 ## 5. Fazit
 
-_TODO: welche ursprünglichen Anforderungen umgesetzt wurden, persönliche Einschätzung, mögliche Erweiterungen oder zukünftige Verbesserungen._
+### 5.1 Erfüllung der Anforderungen
+
+Alle in Abschnitt 1.3 formulierten Anforderungen wurden vollständig umgesetzt: Für alle vier Entitäten (Houses, Professors, Students, Items) existiert vollständige CRUD-Funktionalität, jeweils sowohl über das Django-Admin-Interface als auch über eigene Views und Templates — Nutzer\*innen sind also nicht auf das Admin-Interface angewiesen. Die geforderten Löschregeln zur Sicherung der Datenintegrität sind über die `on_delete`-Optionen der jeweiligen Fremdschlüssel abgebildet: Items werden beim Löschen ihres Hauses automatisch mitgelöscht (`CASCADE`), während optionale Beziehungen wie Hauslehrer\*in oder Berater\*in beim Löschen des referenzierten Objekts lediglich auf `NULL` gesetzt werden (`SET_NULL`), siehe 3.2 und 3.3. Die Anwendung läuft wie gefordert lokal mit SQLite, ohne zusätzliche Infrastruktur (siehe 4). Offen ist zum jetzigen Stand nur Task 11 (Polish) — ein rein visueller Feinschliff von Navigation und Templates sowie ein README-Update —, der keine der ursprünglich gestellten funktionalen Anforderungen betrifft.
+
+### 5.2 Persönlicher Eindruck
+
+Insgesamt hat uns die Arbeit an Hogwarts Inventory Spaß gemacht. Da wir beide eher den Design-Schwerpunkt verfolgen und zuletzt vor allem an reinen Design-Projekten gearbeitet haben, war es eine willkommene Abwechslung, noch einmal ein tatsächliches Programmierprojekt umzusetzen und dabei unsere Programmierkenntnisse aus den ersten Semestern aufzufrischen. Vermutlich werden wir in Zukunft eher selten mit vergleichbaren Projekten zu tun haben, da uns beide der weitere Weg nicht in Richtung Softwareentwicklung führt — gerade deshalb war es schön, dieses Modul noch einmal bewusst dafür zu nutzen.
+
+### 5.3 Erweiterungsmöglichkeiten
+
+Über Task 11 hinaus ließe sich die Anwendung in mehrere Richtungen sinnvoll erweitern. Naheliegend wäre zunächst eine Such- und Filterfunktion in den Listenansichten (z. B. Items nach Kategorie oder Haus, Students nach Jahrgang), verbunden mit Pagination, sobald die Datenmengen wachsen — aktuell laden alle Listen ungefiltert und vollständig. Fachlich passend wäre außerdem eine kleine Rangliste bzw. ein Dashboard, das die vier Häuser nach Hauspunkten sortiert gegenüberstellt, ähnlich einer echten Hogwarts-Punktetafel. Sinnvoll wäre zudem eine Zugriffsbeschränkung: Aktuell sind sämtliche CRUD-Views ohne Anmeldung erreichbar; ein einfaches Login- bzw. Berechtigungssystem, bei dem nur angemeldete Nutzer\*innen bearbeiten oder löschen dürfen, wäre ein naheliegender nächster Schritt. Längerfristig denkbar sind außerdem Bild-Uploads (z. B. ein Foto pro Item oder ein Hauswappen) sowie automatisierte Tests, die aktuell komplett fehlen — bislang wird jede Änderung, wie in den Notizen zu `TASKS.md` festgehalten, nur manuell durchgeklickt.
 
 ## 6. Quellen
 

@@ -196,13 +196,85 @@ class Professor(models.Model):
 
 `null=True` erlaubt `NULL` in der Datenbank, `blank=True` erlaubt ein leeres Feld im Formular — beides zusammen ist nötig, sonst verlangt entweder die Datenbank oder Djangos Formularvalidierung weiterhin ein Haus. Da `ProfessorForm` das Feld nicht anders anpasst, generiert `{{ form.as_p }}` daraus automatisch ein `<select>` mit einer leeren Erstoption, exakt wie im Screenshot oben zu sehen. Beim Löschen eines Hauses, das Hauslehrer\*in für eine\*n Professor\*in ist, greift entsprechend `on_delete=SET_NULL`: Der\*die Professor\*in bleibt bestehen, verliert aber die Zuordnung — anders als bei Items, die beim Löschen ihres Hauses mitgelöscht werden (siehe 3.2). Diese bewusst unterschiedliche Löschstrategie pro Beziehung war ein guter Anlass, `on_delete`-Optionen nicht pauschal, sondern pro Feld anhand der fachlichen Anforderung zu wählen.
 
-### Students
+### 3.4 Students
 
-_TODO: nach Abschluss von Task 6-7 (Students — read/write views)._
+**Funktionalität**
 
-### Items
+Students folgt dem in 3.2 und 3.3 etablierten Muster: Liste unter `/students/` (Name, Jahrgangsstufe, Haus, Berater\*in), Detailansicht, sowie Anlegen/Bearbeiten/Löschen unter `/students/new/`, `/students/<pk>/edit/` und `/students/<pk>/delete/`. Anders als bei Houses und Professors hat `Student` zwei Fremdschlüsselfelder gleichzeitig, mit jeweils unterschiedlicher fachlicher Bedeutung: `house` ist Pflicht (jede\*r Schüler\*in gehört zu genau einem Haus), `advisor` ist optional (nicht jede\*r hat eine\*n zugewiesene\*n Berater\*in). Im Formular erscheinen beide Felder automatisch als Dropdown, befüllt mit allen vorhandenen Häusern bzw. Professor\*innen — genau die in Anforderung 1.3 verlangte Darstellung "house/advisor als Dropdowns".
 
-_TODO: nach Abschluss von Task 8-9 (Items — read/write views)._
+![Liste aller Schüler*innen mit Jahrgangsstufe, Haus und Berater*in](docs/screenshots/student_list.png)
+
+![Detailansicht einer Schülerin mit Links zu Haus und Berater*in](docs/screenshots/student_detail.png)
+
+![Formular zum Anlegen eines Schülers mit Dropdowns für Haus (Pflicht) und Berater*in (optional)](docs/screenshots/student_form.png)
+
+![Sicherheitsabfrage vor dem Löschen einer Schülerin mit Hinweis auf betroffene Items](docs/screenshots/student_confirm_delete.png)
+
+```python
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    year = models.PositiveSmallIntegerField()
+    house = models.ForeignKey(
+        House,
+        on_delete=models.CASCADE,
+        related_name='students',
+    )
+    advisor = models.ForeignKey(
+        Professor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='advisees',
+    )
+```
+
+**Technische Herausforderung**
+
+Die eigentliche Herausforderung bei Students war weniger das CRUD-Gerüst selbst, sondern die Frage, wie zwei Fremdschlüsselfelder auf demselben Modell trotz unterschiedlicher Lösch- und Pflichtsemantik beide korrekt als Dropdown im selben Formular landen, ohne eigene Formularlogik schreiben zu müssen. `StudentForm` deklariert dazu nichts weiter als die Feldliste:
+
+```python
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['name', 'year', 'house', 'advisor']
+```
+
+Django leitet aus `null=True`/`blank=True` bzw. deren Fehlen automatisch ab, ob das jeweilige `<select>` eine leere Erstoption bekommt und ob das Feld im Formular als Pflichtfeld validiert wird — bei `house` nicht, bei `advisor` schon. Beim Löschen eines Hauses greift entsprechend `on_delete=CASCADE`: Da ein Haus für eine\*n Schüler\*in zwingend ist, kann sie\*er nicht "herrenlos" ohne Haus existieren, weshalb Löschung des Hauses konsequenterweise auch die betroffenen Schüler\*innen mitlöscht — ebenso wie bei Items (3.2). Beim Löschen einer\*eines Professor\*in dagegen bleiben die Schüler\*innen bestehen (`on_delete=SET_NULL` auf `advisor`, siehe 3.3). Students ist damit das erste Modell im Projekt, an dem beide bereits etablierten Lösch-Strategien gleichzeitig sichtbar werden.
+
+### 3.5 Items
+
+**Funktionalität**
+
+Items ist der letzte und zugleich am stärksten vernetzte CRUD-Bereich: Liste unter `/items/` (Name, Kategorie, Menge, Haus, Besitzer\*in), Detailansicht mit zusätzlicher Beschreibung, sowie Anlegen/Bearbeiten/Löschen unter `/items/new/`, `/items/<pk>/edit/` und `/items/<pk>/delete/`. Ein Item gehört verpflichtend zu einem Haus (siehe die in 3.2 nachträglich eingeführte `CASCADE`-Regel) und optional zu einer\*einem Besitzer\*in (`Student`). Da `description` ein `TextField` ist, generiert `{{ form.as_p }}` dafür automatisch eine mehrzeilige `<textarea>` statt eines einzeiligen Eingabefelds, ohne dass dafür etwas Zusätzliches in `ItemForm` konfiguriert werden musste.
+
+![Liste aller Items mit Kategorie, Menge, Haus und Besitzer*in](docs/screenshots/item_list.png)
+
+![Detailansicht eines Items inklusive Beschreibung, mit Links zu Haus und Besitzer*in](docs/screenshots/item_detail.png)
+
+![Formular zum Anlegen eines Items mit Textarea für die Beschreibung und Dropdowns für Haus und Besitzer*in](docs/screenshots/item_form.png)
+
+![Sicherheitsabfrage vor dem Löschen eines Items](docs/screenshots/item_confirm_delete.png)
+
+**Technische Herausforderung**
+
+```python
+class Item(models.Model):
+    ...
+    owner = models.ForeignKey(
+        Student,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='items',
+    )
+    house = models.ForeignKey(
+        House,
+        on_delete=models.CASCADE,
+        related_name='items',
+    )
+```
+
+Eine Einschränkung, die uns beim Testen aufgefallen ist und die wir bewusst nicht behoben haben, um den Rahmen des CRUD-Teils nicht zu sprengen: Das `owner`-Dropdown im Formular listet grundsätzlich alle Schüler\*innen, unabhängig vom im selben Formular gewählten `house`. Es ist also möglich, ein Item formal einem Haus zuzuordnen und gleichzeitig eine\*n Besitzer\*in aus einem anderen Haus einzutragen — Django validiert bei einem Standard-`ModelForm` nur, dass die referenzierte ID existiert, nicht aber fachliche Konsistenz zwischen zwei Fremdschlüsselfeldern desselben Formulars. Eine sauberere Lösung wäre eine eigene `clean()`-Methode auf `ItemForm`, die prüft, ob `owner.house == house` gilt, oder ein per JavaScript dynamisch gefiltertes Dropdown. Wir vermerken das hier bewusst als bekannte Grenze der aktuellen Implementierung statt es zu verschweigen (siehe auch Abschnitt 5, mögliche Erweiterungen).
 
 ## 4. Inbetriebnahme
 

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .forms import HouseForm, ProfessorForm
-from .models import House, Professor
+from .models import House, Professor, Student
 
 
 def home(request):
@@ -91,3 +91,16 @@ class ProfessorDeleteView(DeleteView):
     template_name = 'inventory/professor_confirm_delete.html'
     context_object_name = 'professor'
     success_url = reverse_lazy('professor_list')
+
+
+class StudentListView(ListView):
+    model = Student
+    template_name = 'inventory/student_list.html'
+    context_object_name = 'students'
+    ordering = ['name']
+
+
+class StudentDetailView(DetailView):
+    model = Student
+    template_name = 'inventory/student_detail.html'
+    context_object_name = 'student'

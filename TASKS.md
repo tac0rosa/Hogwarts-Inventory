@@ -17,7 +17,7 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
   - `templates/inventory/house_list.html`, `house_detail.html`
   - URLs wired under `/houses/`
 
-- [ ] 3. Houses — write views
+- [x] 3. Houses — write views
   - Create/Update/Delete views + `ModelForm`
   - `house_form.html`, `house_confirm_delete.html`
   - URLs: `/houses/new/`, `/houses/<pk>/edit/`, `/houses/<pk>/delete/`

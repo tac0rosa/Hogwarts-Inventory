@@ -53,6 +53,7 @@
         {% else %}
             <p>No houses yet.</p>
         {% endif %}
+        <a class="back-link" href="{% url 'house_create' %}">+ Add house</a><br>
         <a class="back-link" href="{% url 'home' %}">&larr; Back to home</a>
     </div>
 </body>

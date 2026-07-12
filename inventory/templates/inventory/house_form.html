@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ house.name }} | Hogwarts Inventory</title>
+    <title>{% if house %}Edit {{ house.name }}{% else %}Add House{% endif %} | Hogwarts Inventory</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,32 +18,38 @@
             padding: 2rem 2.5rem;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
         h1 { margin-top: 0; }
-        dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; }
-        dt { font-weight: bold; }
-        dd { margin: 0; }
+        form p { display: flex; flex-direction: column; gap: 0.25rem; margin: 0 0 1rem; }
+        label { font-weight: bold; }
+        input[type=text], input[type=number] {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+        }
+        button {
+            background: #f7f3ff;
+            color: #1b1b3a;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
         a { color: #f7f3ff; }
         .back-link { display: inline-block; margin-top: 1.5rem; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>{{ house.name }}</h1>
-        <dl>
-            <dt>Founder</dt>
-            <dd>{{ house.founder }}</dd>
-            <dt>Common room</dt>
-            <dd>{{ house.common_room }}</dd>
-            <dt>Points</dt>
-            <dd>{{ house.points }}</dd>
-        </dl>
-        <a class="back-link" href="{% url 'house_update' house.pk %}">Edit</a>
-        &nbsp;|&nbsp;
-        <a class="back-link" href="{% url 'house_delete' house.pk %}">Delete</a>
-        <br>
+        <h1>{% if house %}Edit {{ house.name }}{% else %}Add House{% endif %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
         <a class="back-link" href="{% url 'house_list' %}">&larr; Back to houses</a>
     </div>
 </body>

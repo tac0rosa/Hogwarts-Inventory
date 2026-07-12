@@ -1,42 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1b1b3a, #4b2e83);
-            color: #f7f3ff;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            background: rgba(255,255,255,0.12);
-            padding: 2rem 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 { margin-bottom: 0.5rem; }
-        ul { text-align: left; display: inline-block; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>{{ title }}</h1>
-        <p>{{ subtitle }}</p>
-        <h3>Starter inventory</h3>
-        <ul>
-            {% for item in items %}
-                <li>{{ item }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-</body>
-</html>
+{% extends 'inventory/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1b1b3a, #4b2e83);
+        color: #f7f3ff;
+        margin: 0;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+    }
+    .card {
+        background: rgba(255,255,255,0.12);
+        padding: 2rem 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 600px;
+        margin: 4rem auto 0;
+        text-align: center;
+    }
+    h1 { margin-bottom: 0.5rem; }
+</style>
+<div class="card">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+</div>
+{% endblock %}

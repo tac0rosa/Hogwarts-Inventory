@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hogwarts Inventory{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'house_list' %}">Houses</a>
+        <a href="{% url 'professor_list' %}">Professors</a>
+        <a href="{% url 'student_list' %}">Students</a>
+        <a href="{% url 'item_list' %}">Items</a>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

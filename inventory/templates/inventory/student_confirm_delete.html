@@ -1,51 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete {{ student.name }} | Hogwarts Inventory</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1b1b3a, #4b2e83);
-            color: #f7f3ff;
-            margin: 0;
-            min-height: 100vh;
-            padding: 2rem 1rem;
-        }
-        .card {
-            background: rgba(255,255,255,0.12);
-            padding: 2rem 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        h1 { margin-top: 0; }
-        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        button {
-            background: #e05263;
-            color: #fff;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        a { color: #f7f3ff; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Delete {{ student.name }}?</h1>
-        <p>Any items owned by {{ student.name }} will lose their owner. This can't be undone.</p>
-        <form method="post">
-            {% csrf_token %}
-            <div class="actions">
-                <button type="submit">Delete</button>
-                <a href="{% url 'student_detail' student.pk %}">Cancel</a>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+{% extends 'inventory/base.html' %}
+
+{% block title %}Delete {{ student.name }} | Hogwarts Inventory{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1b1b3a, #4b2e83);
+        color: #f7f3ff;
+        margin: 0;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+    }
+    .card {
+        background: rgba(255,255,255,0.12);
+        padding: 2rem 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    h1 { margin-top: 0; }
+    .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    button {
+        background: #e05263;
+        color: #fff;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    a { color: #f7f3ff; }
+</style>
+<div class="card">
+    <h1>Delete {{ student.name }}?</h1>
+    <p>Any items owned by {{ student.name }} will lose their owner. This can't be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="actions">
+            <button type="submit">Delete</button>
+            <a href="{% url 'student_detail' student.pk %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

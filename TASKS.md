@@ -40,10 +40,14 @@ Broken into ~10 self-contained commits, each one leaving the app in a working st
 - [x] 9. Items — write views
   - Create/Update/Delete + form, templates, URLs
 
-- [ ] 10. Navigation & polish
+- [x] 10. Navigation & structure
   - Shared `base.html` with nav links to all four sections
   - Home page links into each list view
-  - Light styling pass, README update (models, routes)
+  - Existing templates extended from `base.html` (no visual/style changes yet)
+
+- [ ] 11. Polish
+  - Light styling pass across nav + all templates
+  - README update (models, routes)
 
 ## Documentation
 Lives in `DOKUMENTATION.md` (written in German). Filled in gradually, alongside the rest of the tasks — not all at once at the end.

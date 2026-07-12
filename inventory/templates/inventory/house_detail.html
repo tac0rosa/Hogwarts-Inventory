@@ -1,34 +1,11 @@
 {% extends 'inventory/base.html' %}
+{% load inventory_extras %}
 
 {% block title %}{{ house.name }} | Hogwarts Inventory{% endblock %}
 
 {% block content %}
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #1b1b3a, #4b2e83);
-        color: #f7f3ff;
-        margin: 0;
-        min-height: 100vh;
-        padding: 2rem 1rem;
-    }
-    .card {
-        background: rgba(255,255,255,0.12);
-        padding: 2rem 2.5rem;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    h1 { margin-top: 0; }
-    dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; }
-    dt { font-weight: bold; }
-    dd { margin: 0; }
-    a { color: #f7f3ff; }
-    .back-link { display: inline-block; margin-top: 1.5rem; }
-</style>
-<div class="card">
-    <h1>{{ house.name }}</h1>
+<div class="card card-detail">
+    <h1><span class="house-dot house-{{ house.name|house_slug }}"></span>{{ house.name }}</h1>
     <dl>
         <dt>Founder</dt>
         <dd>{{ house.founder }}</dd>
@@ -38,9 +15,7 @@
         <dd>{{ house.points }}</dd>
     </dl>
     <a class="back-link" href="{% url 'house_update' house.pk %}">Edit</a>
-    &nbsp;|&nbsp;
     <a class="back-link" href="{% url 'house_delete' house.pk %}">Delete</a>
-    <br>
     <a class="back-link" href="{% url 'house_list' %}">&larr; Back to houses</a>
 </div>
 {% endblock %}
